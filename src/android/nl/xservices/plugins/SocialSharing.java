@@ -674,6 +674,45 @@ public class SocialSharing extends CordovaPlugin {
     return null;
   }
 
+  ‎private ActivityInfo getActivity(final CallbackContext callbackContext, final Intent shareIntent, final String appPackageName, final String appName) {
+  ‎    final PackageManager pm = webView.getContext().getPackageManager();
+  ‎    List<ResolveInfo> activityList = null;
+  ‎   
+  ‎    try {
+  ‎        // Appel existant à queryIntentActivities
+  ‎        activityList = pm.queryIntentActivities(shareIntent, 0);
+  ‎    } catch (BadParcelableException | DeadObjectException e) {
+  ‎        // Logger l'erreur et gérer l'exception
+  ‎        Log.e(TAG, "Échec de la recherche d'activités d'intention", e);
+  ‎       
+  ‎        // Option 1: Retourner null et notifier l'erreur
+  ‎        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Erreur lors de la recherche d'applications disponibles"));
+  ‎        return null;
+  ‎       
+  ‎        // Option 2: Retourner une liste vide pour continuer
+  ‎        // activityList = new ArrayList<>();
+  ‎    }
+  ‎   
+  ‎    // Gestion du cas où activityList est null (exception attrapée mais non traitée)
+  ‎    if (activityList == null) {
+  ‎        callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, "Aucune application disponible"));
+  ‎        return null;
+  ‎    }
+  ‎   
+  ‎    for (final ResolveInfo app : activityList) {
+  ‎        if ((app.activityInfo.packageName).contains(appPackageName)) {
+  ‎            if (appName == null || (app.activityInfo.name).contains(appName)) {
+  ‎                return app.activityInfo;
+  ‎            }
+  ‎        }
+  ‎    }
+  ‎   
+  ‎    // Aucune application correspondante trouvée
+  ‎    callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, getShareActivities(activityList)));
+  ‎    return null;
+  ‎}
+  
+  /*
   private ActivityInfo getActivity(final CallbackContext callbackContext, final Intent shareIntent, final String appPackageName, final String appName) {
     final PackageManager pm = webView.getContext().getPackageManager();
     
@@ -697,7 +736,7 @@ public class SocialSharing extends CordovaPlugin {
     // no matching app found
     callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, getShareActivities(activityList)));
     return null;
-  }
+  }*/
 
   private JSONArray getShareActivities(List<ResolveInfo> activityList) {
     List<String> packages = new ArrayList<String>();
