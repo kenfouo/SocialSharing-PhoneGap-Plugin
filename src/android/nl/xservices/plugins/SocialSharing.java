@@ -128,7 +128,7 @@ public class SocialSharing extends CordovaPlugin {
 
   private boolean isEmailAvailable() {
     final Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "someone@domain.com", null));
-    return cordova.getActivity().getPackageManager().queryIntentActivities(intent, 0).size() > 0;
+    return cordova.getActivity().getPackageManager().(intent, 0).size() > 0;
   }
 
   private boolean invokeEmailIntent(final CallbackContext callbackContext, final String message, final String subject, final JSONArray to, final JSONArray cc, final JSONArray bcc, final JSONArray files) throws JSONException {
@@ -186,7 +186,7 @@ public class SocialSharing extends CordovaPlugin {
 
         draft.setData(Uri.parse("mailto:"));
 
-        List<ResolveInfo> emailAppList = cordova.getActivity().getPackageManager().queryIntentActivities(draft, 0);
+        List<ResolveInfo> emailAppList = cordova.getActivity().getPackageManager().(draft, 0);
 
         List<LabeledIntent> labeledIntentList = new ArrayList();
         for (ResolveInfo info : emailAppList) {
@@ -676,7 +676,17 @@ public class SocialSharing extends CordovaPlugin {
 
   private ActivityInfo getActivity(final CallbackContext callbackContext, final Intent shareIntent, final String appPackageName, final String appName) {
     final PackageManager pm = webView.getContext().getPackageManager();
-    List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+    
+    // Ajouter une gestion d'exception dans la méthode getActivity de SocialSharing.java
+    try {
+        // Appel existant à queryIntentActivities
+        List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+    } catch (BadParcelableException | DeadObjectException e) {
+        // Logger l'erreur et retourner une liste vide ou une valeur par défaut
+        Log.e(TAG, "Échec de la recherche d'activités d'intention", e);
+        return new ArrayList<>();
+    }
+    
     for (final ResolveInfo app : activityList) {
       if ((app.activityInfo.packageName).contains(appPackageName)) {
         if (appName == null || (app.activityInfo.name).contains(appName)) {
