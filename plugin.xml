@@ -63,63 +63,6 @@
   <!-- android -->
   <platform name="android">
 
-      <config-file target="AndroidManifest.xml" parent="/*">
-
-              <queries>
-        
-                  <!-- Partage générique -->
-                  <intent>
-                      <action android:name="android.intent.action.SEND_MULTIPLE" />
-                      <data android:mimeType="*/*" />
-                  </intent>
-        
-                  <!-- SMS -->
-                  <intent>
-                      <action android:name="android.intent.action.SENDTO" />
-                      <data android:scheme="smsto" />
-                  </intent>
-        
-                  <intent>
-                      <action android:name="android.intent.action.SENDTO" />
-                      <data android:scheme="sms" />
-                  </intent>
-        
-                  <!-- Email -->
-                  <intent>
-                      <action android:name="android.intent.action.SENDTO" />
-                      <data android:scheme="mailto" />
-                  </intent>
-        
-                  <!-- WhatsApp -->
-                  <package android:name="com.whatsapp" />
-                  <package android:name="com.whatsapp.w4b" />
-        
-                  <!-- Facebook -->
-                  <package android:name="com.facebook.katana" />
-                  <package android:name="com.facebook.orca" />
-        
-                  <!-- Instagram -->
-                  <package android:name="com.instagram.android" />
-        
-                  <!-- Telegram -->
-                  <package android:name="org.telegram.messenger" />
-        
-                  <!-- Twitter / X -->
-                  <package android:name="com.twitter.android" />
-        
-                  <!-- LinkedIn -->
-                  <package android:name="com.linkedin.android" />
-        
-                  <!-- Gmail -->
-                  <package android:name="com.google.android.gm" />
-        
-                  <!-- Outlook -->
-                  <package android:name="com.microsoft.office.outlook" />
-        
-              </queries>
-        
-          </config-file>      
-
     <config-file target="res/xml/config.xml" parent="/*">
       <feature name="SocialSharing">
         <param name="android-package" value="nl.xservices.plugins.SocialSharing" />
