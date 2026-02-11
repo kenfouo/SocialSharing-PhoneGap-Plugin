@@ -676,7 +676,15 @@ public class SocialSharing extends CordovaPlugin {
 
   private ActivityInfo getActivity(final CallbackContext callbackContext, final Intent shareIntent, final String appPackageName, final String appName) {
     final PackageManager pm = webView.getContext().getPackageManager();
-    List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+    
+    //List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+    //List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, 0);
+        
+    List<ResolveInfo> activityList = pm.queryIntentActivities(shareIntent, PackageManager.MATCH_DEFAULT_ONLY);
+    
+    // Affiche le nombre d'activités trouvées 
+    Log.d("SharePlugin", "Nombre d'activités trouvées : " + activityList.size());
+    
     for (final ResolveInfo app : activityList) {
       if ((app.activityInfo.packageName).contains(appPackageName)) {
         if (appName == null || (app.activityInfo.name).contains(appName)) {
