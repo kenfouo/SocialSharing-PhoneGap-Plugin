@@ -128,7 +128,7 @@ public class SocialSharing extends CordovaPlugin {
 
   private boolean isEmailAvailable() {
     final Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.fromParts("mailto", "someone@domain.com", null));
-    return cordova.getActivity().getPackageManager().(intent, 0).size() > 0;
+    return cordova.getActivity().getPackageManager().queryIntentActivities(intent, 0).size() > 0;
   }
 
   private boolean invokeEmailIntent(final CallbackContext callbackContext, final String message, final String subject, final JSONArray to, final JSONArray cc, final JSONArray bcc, final JSONArray files) throws JSONException {
@@ -186,7 +186,7 @@ public class SocialSharing extends CordovaPlugin {
 
         draft.setData(Uri.parse("mailto:"));
 
-        List<ResolveInfo> emailAppList = cordova.getActivity().getPackageManager().(draft, 0);
+        List<ResolveInfo> emailAppList = cordova.getActivity().getPackageManager().queryIntentActivities.(draft, 0);
 
         List<LabeledIntent> labeledIntentList = new ArrayList();
         for (ResolveInfo info : emailAppList) {
