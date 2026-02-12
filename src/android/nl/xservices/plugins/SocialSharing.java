@@ -677,13 +677,21 @@ public class SocialSharing extends CordovaPlugin {
   private ActivityInfo getActivity(final CallbackContext callbackContext, final Intent shareIntent, final String appPackageName, final String appName) {
     final PackageManager pm = webView.getContext().getPackageManager();
     
-    List<ResolveInfo> activityList = new ArrayList<>();
-
-    try {
-       activityList = pm.queryIntentActivities(shareIntent, 0);
-    } catch (JSONException e) {
-       Log.d("SharePlugin", "Erreur detectée queryIntentActivities: " +e.getMessage());
-    }
+  // On déclare la liste sans l'instancier inutilement
+  List<ResolveInfo> activityList;
+  
+  try {
+      activityList = pm.queryIntentActivities(shareIntent, 0);
+      
+      // Il est recommandé de vérifier si le résultat n'est pas nul ou vide
+      if (activityList == null || activityList.isEmpty()) {
+          Log.d("SharePlugin", "Aucune application trouvée pour cet intent.");
+      }
+  } catch (Exception e) {
+      // On utilise Exception car queryIntentActivities n'est pas lié au JSON
+      Log.e("SharePlugin", "Erreur lors de queryIntentActivities: " + e.getMessage());
+      activityList = new ArrayList<>(); // Évite un NullPointerException plus tard
+  }
     
     // Affiche le nombre d'activités trouvées 
     Log.d("SharePlugin", "Nombre d'activités trouvées : " + activityList.size());
